@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wind Farm Production Prediction</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Wind Farm Production Prediction</h1>
+    <form id="prediction-form">
+        <label for="u10">u10 (m/s):</label>
+        <input type="text" id="u10" name="u10" required><br>
+
+        <label for="v10">v10 (m/s):</label>
+        <input type="text" id="v10" name="v10" required><br>
+
+        <label for="u100">u100 (m/s):</label>
+        <input type="text" id="u100" name="u100" required><br>
+
+        <label for="v100">v100 (m/s):</label>
+        <input type="text" id="v100" name="v100" required><br>
+
+        <button type="button" id="predict-button">Predict</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#predict-button').click(function() {
+                var u10 = $('#u10').val();
+                var v10 = $('#v10').val();
+                var u100 = $('#u100').val();
+                var v100 = $('#v100').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/predict',
+                    data: {
+                        u10: u10,
+                        v10: v10,
+                        u100: u100,
+                        v100: v100
+                    },
+                    success: function(response) {
+                        $('#result').text('Predicted production: ' + response.production.toFixed(2));
+                    },
+                    error: function(response) {
+                        $('#result').text('Error: ' + response.error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
